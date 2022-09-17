@@ -75,6 +75,10 @@ const login_user = asyncHandler(async (req, res) => {
       maxAge: 60 * 60 * 6 * 1000,
       httpOnly: true
     });
+    res.cookie("user", user, {
+      maxAge: 60 * 60 * 6 * 1000,
+      httpOnly: true
+    });
     res.json({
       _id: user.id,
       name: user.name,

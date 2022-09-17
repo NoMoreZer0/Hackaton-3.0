@@ -1,6 +1,7 @@
 const express = require('express');
 const User = require('./models/User');
 const Product = require('./models/Product');
+const Order = require('./models/Order')
 const mongoose = require('mongoose');
 const dotenv = require('dotenv').config()
 const bodyParser = require('body-parser');
@@ -35,6 +36,7 @@ app.get('/profile', is_signed_in, async(req, res) => {
 
 app.use('/api/users', require('./routes/user_routes'))
 
+//Verify UniqueString for every user
 app.get('/verify/:uniqueString', async(req, res) => {
   const { uniqueString } = req.params;
 
@@ -49,9 +51,32 @@ app.get('/verify/:uniqueString', async(req, res) => {
   }
 });
 
+//Checkout orders in the cart
+app.post('/checkout', function(req, res, next) {
+  if (!req.session.cart) {
+    return res.json({ error: 'cart is empty' });
+  }
+  var myCart = new Cart(req.session.cart);
+  
+  //Somehow pay things in the cart 
+
+  const payment_id = 0; //some id generated in payment process
+  const myUser = req.cookies["user"];
+
+  var order = new Order({
+    user: myUser,
+    cart: myCart,
+    payment_id: payment_Id
+  })
+
+  order.save(); // save orders to order database
+})
+
+// Admin Panel
 const AdminJS = require('adminjs')
 const AdminJSExpress = require('@adminjs/express')
 const AdminJSMongoose = require('@adminjs/mongoose');
+const Cart = require('./models/Cart');
 
 AdminJS.registerAdapter({
   Resource: AdminJSMongoose.Resource,

@@ -10,8 +10,6 @@ const rand_string = () => { //generating unique string for each user
   return randStr;
 }
 
-console.log(process.env.GMAIL_USER + " " + process.env.GMAIL_PASS);
-
 const send_email = (email, uniqueString) => {
   var Transport = nodemailer.createTransport({
       service: 'Gmail',
